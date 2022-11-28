@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html>
+!DOCTYPE html>
+<html lang="en"  >
 
 <head>
 	<title>A-Frame - Video Texture</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=chrome" />
 	<script src="js/aframe-master-v1.3.0.min.js"></script>
-	<script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
+	
 </head>
 
 <body>
@@ -16,7 +18,7 @@ AFRAME.registerComponent('video-controls', {
 	init: function()
 	{
 		let video = document.querySelector("#video");
-
+		//let video = document.getElementById("video");
 		let videoDisplay = document.querySelector("#video-display");
 		let videoBorder  = document.querySelector("#video-border");
 		let videoMesh  = videoDisplay.getObject3D("mesh");
@@ -35,18 +37,41 @@ AFRAME.registerComponent('video-controls', {
 				borderMesh.material.color.set("#440000");
 			}
 		});
+
+		const constraints = {
+ 		 audio: true,
+ 		 video: true
+		};
+
+		navigator.mediaDevices.getUserMedia(constraints)
+  		.then((mediaStream) => {
+    	const video = document.querySelector('video');
+    	video.srcObject = mediaStream;
+    	video.onloadedmetadata = () => {
+      	video.play();
+    };
+  })
+  .catch((err) => {
+    // always check for errors at the end.
+    console.error(`${err.name}: ${err.message}`);
+  });
+		
+	
+
 	}
 	
 });
 
 </script>
 
-<a-scene>
-	gesture-detector
-	<a-assets timeout="10000">
+<a-scene
+vr-mode-ui="enabled: false"
+>
+	
+	<a-assets timeout="5000">
 		<img id="grid" src="images/border.png" crossorigin="anonymous" />
 		<img id="sky" src="images/stars.jpg" crossorigin="anonymous" />
-		<video id="video" loop="true" src="video/sizo.mp4" autoplay></video>
+		<video id="video" src="video/sizo.mp4" autoplay crossorigin="anonymous"></video>
 	</a-assets>
 
 	<!--<a-entity movement-controls="speed: 0.1; fly: false;" position="0 0 0">
@@ -75,22 +100,22 @@ AFRAME.registerComponent('video-controls', {
 		width = "17" height = "10"
 		position = "0 5 -20"
 		color = "#440000"
+	
 		video-controls>		
 		<a-video  
 			id = "video-display"
 			width="16" height="9" 
 			position="0 0 0.1"
-			src="#video">
-			gesture-handler
-
-		</a-video>
+			src="#video"
+			playsinline	
+			autoplay	
+			></a-video>
+		
 	</a-plane>
 	
 </a-scene>
 </body>
 </html>
-
-
 
 
 
