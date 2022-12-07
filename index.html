@@ -1,84 +1,38 @@
-!DOCTYPE html>
-<html lang="en"  >
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
 	<title>A-Frame - Video Texture</title>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=chrome" />
-	<script src="js/aframe-master-v1.3.0.min.js"></script>
-	
+	<script src="js/aframe-master-v1.3.0.js"></script>
+	<script src="js/play-on-click.js"></script>
+	<script src="js/hide-on-play.js"></script>
+
 </head>
 
 <body>
-
-<script>
-
-AFRAME.registerComponent('video-controls', {
 	
-	init: function()
-	{
-		let video = document.querySelector("#video");
-		//let video = document.getElementById("video");
-		let videoDisplay = document.querySelector("#video-display");
-		let videoBorder  = document.querySelector("#video-border");
-		let videoMesh  = videoDisplay.getObject3D("mesh");
-		let borderMesh = videoBorder.getObject3D("mesh");
-		
-		videoBorder.addEventListener("mousedown", function(event)
-		{
-			if ( video.paused )
-			{
-				video.play();
-				borderMesh.material.color.set("#004400");
-			}
-			else
-			{
-				video.pause();
-				borderMesh.material.color.set("#440000");
-			}
-		});
+<a-scene id="vr-scene">
 
-		const constraints = {
- 		 audio: true,
- 		 video: true
-		};
-
-		navigator.mediaDevices.getUserMedia(constraints)
-  		.then((mediaStream) => {
-    	const video = document.querySelector('video');
-    	video.srcObject = mediaStream;
-    	video.onloadedmetadata = () => {
-      	video.play();
-    };
-  })
-  .catch((err) => {
-    // always check for errors at the end.
-    console.error(`${err.name}: ${err.message}`);
-  });
-		
+<a-camera 
+    id="camera"
+    position="0 1.8 4"
+    cursor-visible="true"
+    cursor-scale="2" 
+    cursor-color="#000000" 
+    cursor-offset="2" 
+    cursor-maxdistance="100"
+    cursor-opacity="0.7"></a-camera>
 	
-
-	}
-	
-});
-
-</script>
-
-<a-scene
-vr-mode-ui="enabled: false"
->
-	
-	<a-assets timeout="5000">
+	<a-assets>
 		<img id="grid" src="images/border.png" crossorigin="anonymous" />
 		<img id="sky" src="images/stars.jpg" crossorigin="anonymous" />
-		<video id="video" src="video/sizo.mp4" autoplay crossorigin="anonymous"></video>
+		<video id="sizoVideo"  preload="auto" src="video/sizo.webm" loop="false" autoplay playsinline style="display:none" crossorigin="anonymous"
+		></video>
+		
 	</a-assets>
 
-	<!--<a-entity movement-controls="speed: 0.1; fly: false;" position="0 0 0">
-		<a-entity camera position="0 1.5 1" look-controls></a-entity>
-		<a-entity id="leftHand" laser-controls="hand: left" raycaster="" line="color: #FF00FF"></a-entity>
-		<a-entity id="rightHand" laser-controls="hand: right" raycaster="" line="color: #FFFF00"></a-entity>
-	</a-entity>-->
 	
 	<a-sky 
 		rotation = "0 0 0"
@@ -100,19 +54,17 @@ vr-mode-ui="enabled: false"
 		width = "17" height = "10"
 		position = "0 5 -20"
 		color = "#440000"
-	
-		video-controls>		
+		>		
+		
 		<a-video  
 			id = "video-display"
 			width="16" height="9" 
 			position="0 0 0.1"
-			src="#video"
-			playsinline	
-			autoplay	
-			></a-video>
-		
-	</a-plane>
-	
+			src="#sizoVideo"
+			play-on-click
+			visible="false"
+		></a-video>			
+	</a-plane>	
 </a-scene>
 </body>
 </html>
